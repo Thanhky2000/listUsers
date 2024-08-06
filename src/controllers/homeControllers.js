@@ -1,5 +1,5 @@
 const connection = require('../config/database');
-const {getAllUsers, getUserById, updateUsersById} = require('../service/CRUDservices');
+const {getAllUsers, getUserById, updateUsersById,deleteUserById,} = require('../service/CRUDservices');
 
 
 
@@ -19,7 +19,7 @@ const postCreateUser = async (req, res) => {
         let [results, fields] = await connection.query(`INSERT INTO Users (email, name, city) VALUES (?, ?, ?)`,[email, name, city]
         );
         console.log(results)
-          res.send('Create success');
+          res.redirect('/');
 }
       
 
@@ -42,7 +42,20 @@ const postUpdateUser = async (req, res) => {
     
      
         await updateUsersById(email, name, city, userId);
-        res.send('Updated success');
+        res.redirect('/');
+}
+
+const postDeleteUser = async (req, res) => {
+    // 
+    const userId = req.params.id;
+    let user = await getUserById(userId);
+          res.render('confirmDeleteUser.ejs', {userEdit : user});
+}
+
+const postHandleDestroyUser = async (req, res) => {
+    let userId = req.body.userId;
+        await deleteUserById(userId);
+        res.redirect('/');
 }
 
 module.exports = {
@@ -51,4 +64,6 @@ module.exports = {
     getCreatePage,
     getUpdatePage,
     postUpdateUser,
+    postDeleteUser,
+    postHandleDestroyUser,
 }
