@@ -45,4 +45,8 @@ button {
     color: white;
   }
 
+  .d-none {
+    display: none;
+  }
+
   
